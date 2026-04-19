@@ -1,0 +1,44 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+*/.DS_Store
+*/.DS_Store?
+*/._*
+*/.Spotlight-V100
+*/.Trashes
+*/ehthumbs.db
+*/Thumbs.db
+*/desktop.ini
+
+# IDE files
+*/.vscode/
+.vscode/
+*/.idea/
+.idea/
+*/*.suo
+*.suo
+*/*.ntvs*
+*.ntvs*
+*/*.njsproj
+*.njsproj
+*/*.sln
+*.sln
+*/*.sw?
+*.sw?
+*/.local/
+.local/
+
+# QBitSoft
+'Dodge! (QBitSoft)'/src/main_.fnl
+
+*/.git/
+
+echo-clone-souls/presentation-projet-24h.pptx
+./.local
