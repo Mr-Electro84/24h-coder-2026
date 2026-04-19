@@ -4,49 +4,49 @@
 ;; script: fennel
 ;; /Applications/tic80.app/Contents/MacOS/tic80 --skip --fs . --cmd="load assets/sprites & import code src/main2.fnl & run"
 
-(local SCREEN-W 240)
-(local SCREEN-H 136)
-(local TILE-SIZE 8)
-(local LEVEL-W 30)
-(local LEVEL-H 17)
-(local MAP-TILES-W 240)
-(local MAP-TILES-H 136)
-(local MAX-CLONES 3)
-(local USE-CART-SPRITES true)
-(local USE-CART-SFX true)
+(global SCREEN-W 240)
+(global SCREEN-H 136)
+(global TILE-SIZE 8)
+(global LEVEL-W 30)
+(global LEVEL-H 17)
+(global MAP-TILES-W 240)
+(global MAP-TILES-H 136)
+(global MAX-CLONES 3)
+(global USE-CART-SPRITES true)
+(global USE-CART-SFX true)
 
-(local GRAVITY 0.3)
-(local WALK-SPEED 1.5)
-(local JUMP-FORCE -3.5)
-(local MAX-FALL 4.0)
-(local SPECTATOR-SPEED 2.5)
-(local FOLLOW-SEGMENTS 9)
-(local FOLLOW-LERP 0.45)
+(global GRAVITY 0.3)
+(global WALK-SPEED 1.5)
+(global JUMP-FORCE -3.5)
+(global MAX-FALL 4.0)
+(global SPECTATOR-SPEED 2.5)
+(global FOLLOW-SEGMENTS 9)
+(global FOLLOW-LERP 0.45)
 
-(local FLAG-SOLID 0)
-(local FLAG-DEADLY 1)
-(local FLAG-PATROLLER 2)
-(local FLAG-SHOOTER 3)
-(local FLAG-EXIT 4)
+(global FLAG-SOLID 0)
+(global FLAG-DEADLY 1)
+(global FLAG-PATROLLER 2)
+(global FLAG-SHOOTER 3)
+(global FLAG-EXIT 4)
 
-(local SPR-PLAYER-A 256)
-(local SPR-PLAYER-B 288)
-(local SPR-CLONE-A 256)
-(local SPR-PATROLLER 4)
-(local SPR-SHOOTER 324)
-(local SPR-PROJECTILE 16)
-(local SPR-GOBLIN-FIRE 392)
-(local SPR-HUNTER-TL 260)
-(local SPR-HUNTER-TR 261)
-(local SPR-HUNTER-BL 276)
-(local SPR-HUNTER-BR 277)
-(local SPR-CHECKPOINT-OFF 16)
-(local SPR-CHECKPOINT-ON 32)
+(global SPR-PLAYER-A 256)
+(global SPR-PLAYER-B 288)
+(global SPR-CLONE-A 256)
+(global SPR-PATROLLER 4)
+(global SPR-SHOOTER 324)
+(global SPR-PROJECTILE 16)
+(global SPR-GOBLIN-FIRE 392)
+(global SPR-HUNTER-TL 260)
+(global SPR-HUNTER-TR 261)
+(global SPR-HUNTER-BL 276)
+(global SPR-HUNTER-BR 277)
+(global SPR-CHECKPOINT-OFF 16)
+(global SPR-CHECKPOINT-ON 32)
 
-(local SPAWN-X 952)
-(local SPAWN-Y 520)
-(local SPAWN-TX (// SPAWN-X TILE-SIZE))
-(local SPAWN-TY (// SPAWN-Y TILE-SIZE))
+(global SPAWN-X 952)
+(global SPAWN-Y 520)
+(global SPAWN-TX (// SPAWN-X TILE-SIZE))
+(global SPAWN-TY (// SPAWN-Y TILE-SIZE))
 (global CHECKPOINT-A-TX 231)
 (global CHECKPOINT-A-TY 25)
 (global CHECKPOINT-B-TX 119)
@@ -962,8 +962,6 @@
 ;; Retourne true si le joueur est assez proche d'un checkpoint.
 ;; Evite les ratés quand la hitbox ne recouvre pas exactement la tuile du checkpoint.
 (fn player-near-checkpoint? [tx ty]
-  ;; Verifie si les pieds du joueur couvrent le tile checkpoint ou ses voisins immédiats.
-  ;; Plus fiable que la distance car tient compte de la hauteur du sprite (16px).
   (let [foot-x (+ player.x 4)
         foot-y (+ player.y (- (or player.h 16) 1))
         ftx (// foot-x TILE-SIZE)
@@ -1002,8 +1000,6 @@
         (set-checkpoint CHECKPOINT-D-TX CHECKPOINT-D-TY)))))
 
 ;; Gere l'ouverture et fermeture de toutes les portes selon la proximite du joueur.
-;; Les portes s'ouvrent quand le joueur est proche et se ferment quand il s'eloigne.
-;; Le systeme ne s'arme qu'apres que le joueur se soit d'abord eloigne des portes.
 (fn update-door []
   (let [near-door (and player.alive
     (or
@@ -1076,7 +1072,6 @@
     (teleport-player-to-spawn-door)))
 
 ;; Deplace le joueur en mode spectateur libre (sans physique ni collision).
-;; Les 4 directions deplacent la camera dans la map entiere.
 (fn update-spectator-player [entity input-left input-right input-up input-down]
   (let [w (or entity.w 8) h (or entity.h 8)
         max-x (- (* MAP-TILES-W TILE-SIZE) w)
@@ -1090,17 +1085,13 @@
     (set entity.vx 0) (set entity.vy 0) (set entity.on-ground false)))
 
 ;; Anime les flammes decoratives en cyclant entre 3 frames (432, 433, 434).
-;; Change de frame toutes les 8 frames de jeu (environ 7.5 fps d'animation).
 (fn update-flame-animation []
   (let [phase (% (// state.timer 8) 3)
         frame (if (= phase 0) 432 (if (= phase 1) 433 434))]
     (set flame-sprite frame))
-  ;; Cycle lave : alterne #47 et #159 toutes les 15 frames
   (set lava-sprite (if (= (% (// state.timer 15) 2) 0) 47 159)))
 
 ;; Physique universelle partagee entre le joueur et les clones.
-;; Gere : deplacement horizontal, saut, grimpe d'echelle, gravite,
-;; resolution de collision X puis Y, wrapping horizontal, chute hors map.
 (fn update-entity [entity input-left input-right input-jump input-down]
   (when entity.alive
     (if input-left
@@ -1161,7 +1152,6 @@
   (set projectiles kept))
 
 ;; Ignore toute tentative de tuer un clone (clones immortels dans ce jeu).
-;; Les clones morts sont retires des plateformes en marquant alive=false.
 (global kill-clone
   (fn [clone]
     (when clone
@@ -1169,7 +1159,6 @@
       (set clone.immobile false))))
 
 ;; Met a jour un clone pour une frame : lit son input enregistre, applique la physique.
-;; Quand les inputs sont epuises, le clone se fige sur place (devient plateforme).
 (fn update-clone [clone]
   (when clone.alive
     (if (<= clone.frame (list-length clone.inputs))
@@ -1192,9 +1181,7 @@
     (when (and clone.alive (entity-on-deadly-tile? clone)) (kill-clone clone)))
   (rebuild-solid-clones))
 
-;; Met a jour les ennemis patrouilleurs : aller-retour dans leur zone,
-;; acceleration vers la cible la plus proche si elle est dans le rayon de detection.
-;; Tue le joueur ou les clones en cas de contact.
+;; Met a jour les ennemis patrouilleurs.
 (fn update-patrollers []
   (each [_ p (ipairs patrollers)]
     (when p.alive
@@ -1220,21 +1207,18 @@
   (rebuild-solid-clones))
 
 ;; Retourne true si un obstacle solide se trouve devant le hunter dans la direction dir.
-;; Utilise pour que le hunter saute par-dessus les obstacles ou les fosses.
 (fn hunter-obstacle-ahead? [hunter dir]
   (let [probe-x (+ hunter.x (* dir 2))]
     (or (collides-at? hunter probe-x hunter.y)
         (collides-at? hunter probe-x (- hunter.y 1)))))
 
 ;; Retourne true s'il y a un vide devant le hunter dans la direction dir.
-;; Utilise pour que le hunter saute les fosses plutot que d'y tomber.
 (fn hunter-gap-ahead? [hunter dir]
   (let [front-x (if (> dir 0) (+ hunter.x 16) (- hunter.x 1))
         foot-y (+ hunter.y 17)]
     (not (point-solid? front-x foot-y))))
 
-;; Met a jour le hunter (boss pourchasseur) : s'active quand le joueur passe sur sa case,
-;; puis pourchasse le joueur avec la physique complete (saut, contournement d'obstacles).
+;; Met a jour le hunter (boss pourchasseur).
 (fn update-hunters []
   (each [_ hunter (ipairs hunters)]
     (when hunter.alive
@@ -1266,7 +1250,6 @@
             (trigger-death)))))))
 
 ;; Met a jour l'orientation des sentinelles vers le joueur.
-;; Les sentinelles pivotent pour faire face au joueur mais ne se deplacent pas.
 (fn update-sentries []
   (each [_ sentry (ipairs sentries)]
     (when sentry.alive
@@ -1275,15 +1258,12 @@
         (set sentry.facing-right (> px sx))))))
 
 ;; Cree une flamme d'impact a la position (x,y) avec un timer de 120 frames.
-;; Limite a 24 flammes simultanees pour eviter les ralentissements.
 (fn spawn-impact-flame [x y]
   (table.insert impact-flames {:x x :y y :timer 120})
   (when (> (list-length impact-flames) 24)
     (table.remove impact-flames 1)))
 
 ;; Cree un projectile a (x,y) avec une velocite (vx,vy) et des options.
-;; Options : sprite, leave-flame (laisse une flamme a l'impact), owner (:player/:enemy),
-;; anim-sprites (liste de sprites pour l'animation), anim-step (vitesse d'anim).
 (fn spawn-projectile [x y vx vy opts]
   (table.insert projectiles
     {:x x :y y :vx vx :vy vy :alive true
@@ -1296,8 +1276,6 @@
      :anim-timer 0}))
 
 ;; Tire une boule de feu animee depuis le joueur dans sa direction courante.
-;; Necessite fire-skill-unlocked. Cooldown de 10 frames entre chaque tir.
-;; La boule laisse une flamme d'impact sur les tiles solides.
 (fn shoot-player-fireball []
   (when (and fire-skill-unlocked player.alive
              (not spectator-mode)
@@ -1311,9 +1289,7 @@
          :anim-sprites [FIREBALL-SPR-A FIREBALL-SPR-B] :anim-step 2})
       (set fireball-cooldown 10) (sfx 4))))
 
-;; Met a jour tous les tireurs (shooters) : decremente le timer et tire vers
-;; la cible la plus proche quand le timer atteint fire-interval.
-;; Les gros tireurs (big=true) mettent a jour leur orientation vers la cible.
+;; Met a jour tous les tireurs (shooters).
 (fn update-shooters []
   (each [_ s (ipairs shooters)]
     (when s.alive
@@ -1336,8 +1312,6 @@
         (set s.timer 0)))))
 
 ;; Met a jour tous les projectiles : animation, deplacement, collisions.
-;; Un projectile enemy tue le joueur ou les clones. Un projectile :player
-;; tue les patrouilleurs, shooters et hunters. Laisse une flamme si leave-flame.
 (fn update-projectiles []
   (each [_ p (ipairs projectiles)]
     (when p.alive
@@ -1379,8 +1353,7 @@
             (set p.alive false) (set hunter.alive false))))))
   (remove-dead-projectiles) (rebuild-solid-clones))
 
-;; Met a jour les flammes d'impact : decremente leur timer et les supprime quand elles expirent.
-;; Tue le joueur si il marche dedans (zone de feu persistante).
+;; Met a jour les flammes d'impact.
 (fn update-impact-flames []
   (var kept [])
   (each [_ f (ipairs impact-flames)]
@@ -1392,7 +1365,6 @@
   (set impact-flames kept))
 
 ;; Met a jour la trainee visuelle qui suit le joueur.
-;; Chaque segment suit le precedent avec un lerp pour un effet de fluidite.
 (fn update-player-trail []
   (when (= (length player-trail) 0) (reset-player-follow))
   (let [head-x (+ player.x 4) head-y (+ player.y 14)]
@@ -1402,8 +1374,7 @@
         (set seg.x (+ seg.x (* (- tx seg.x) FOLLOW-LERP)))
         (set seg.y (+ seg.y (* (- ty seg.y) FOLLOW-LERP)))))))
 
-;; Initialise le champ d'etoiles du menu avec 3 couches de vitesse differentes.
-;; 80 etoiles lentes, 30 moyennes, 10 rapides pour un effet de parallaxe.
+;; Initialise le champ d'etoiles du menu.
 (fn init-stars []
   (set stars [])
   (for [_ 1 80]
@@ -1416,16 +1387,14 @@
     (table.insert stars {:x (math.random 0 239) :y (math.random 0 135)
       :speed (/ (math.random 8 12) 10) :color 15})))
 
-;; Anime et dessine les etoiles du fond : deplace chaque etoile vers la droite,
-;; la repositionne aleatoirement a gauche quand elle sort de l'ecran.
+;; Anime et dessine les etoiles du fond.
 (fn animate-stars []
   (each [_ star (ipairs stars)]
     (set star.x (+ star.x star.speed))
     (when (> star.x 239) (set star.x 0) (set star.y (math.random 0 135)))
     (pix star.x star.y star.color)))
 
-;; Dessine le soleil noir anime du menu : cercle noir avec rayons oranges
-;; et deux anneaux concentriques. Le rayon pulse selon un sinus du temps.
+;; Dessine le soleil noir anime du menu.
 (fn draw-black-sun []
   (let [radius (+ 12 (* 2 (math.sin (* title-time 0.8)))) cx 120 cy 28]
     (circb cx cy (+ radius 5) 2) (circb cx cy (+ radius 3) 1)
@@ -1436,8 +1405,7 @@
             rx2 (* (+ radius 7) (math.cos angle)) ry2 (* (+ radius 7) (math.sin angle))]
         (line (+ cx rx1) (+ cy ry1) (+ cx rx2) (+ cy ry2) 9)))))
 
-;; Dessine le titre du jeu avec 3 couches : ombre noire, texte orange et texte cyan.
-;; Le texte orange oscille verticalement selon un sinus du temps titre.
+;; Dessine le titre du jeu.
 (fn draw-title-card []
   (print "Echo Clone" 62 22 0 0 0 false 2)
   (let [offset (* (math.sin title-time) 2)]
@@ -1448,7 +1416,6 @@
     (print subtitle sx 46 13)))
 
 ;; Dessine les ailes pixel-art du joueur si l'option est activee.
-;; Les ailes battent f un sinus du temps pour un effet de vol.
 (fn draw-player-wings [sx sy]
   (when show-player-wings
     (let [flap (* (math.sin (* title-time 7)) 1.2)
@@ -1460,8 +1427,7 @@
       (line br (+ sy 7) rtx top-y 13) (line br (+ sy 9) (+ rtx 1) (+ mid-y 1) 12)
       (line br (+ sy 11) (- rtx 1) (+ mid-y 3) 6) (circ rtx (+ sy 10) 1 12))))
 
-;; Dessine le sprite joueur (2x2 tiles) avec flip horizontal selon sa direction.
-;; Applique le decalage camera et le screen shake. En mode spectateur, utilise le sprite clone.
+;; Dessine le sprite joueur.
 (fn draw-player []
   (when player.alive
     (let [sx (+ (- player.x cam-x 4) shake-x)
@@ -1471,7 +1437,6 @@
            sx sy 0 1 (if (< player.dir 0) 1 0) 0 2 2))))
 
 ;; Dessine la trainee visuelle coloree qui suit le joueur.
-;; Segments relies par des lignes, puis cercles par-dessus pour l'effet de perles.
 (fn draw-player-follow []
   (let [colors [14 13 12 6 5]]
     (each [i seg (ipairs player-trail)]
@@ -1484,8 +1449,7 @@
       (let [c (. colors (+ 1 (% i (length colors)))) r (if (< i 3) 2 1)]
         (circ (+ (- seg.x cam-x) shake-x) (+ (- seg.y cam-y) shake-y) r c)))))
 
-;; Dessine tous les clones actifs avec flip selon leur direction.
-;; Utilise le sprite SPR-CLONE-A (2x2 tiles) avec decalage camera.
+;; Dessine tous les clones actifs.
 (fn draw-clones []
   (each [_ clone (ipairs active-clones)]
     (when clone.alive
@@ -1494,8 +1458,7 @@
         (+ (- clone.y cam-y) shake-y)
         0 1 (if (< clone.dir 0) 1 0) 0 2 2))))
 
-;; Dessine tous les ennemis et projectiles : patrouilleurs, shooters (simples et grands),
-;; hunters (2x2 tiles), sentinelles, rollers, flyers, projectiles et flammes d'impact.
+;; Dessine tous les ennemis et projectiles.
 (fn draw-traps []
   (each [_ p (ipairs patrollers)]
     (spr (or p.sprite SPR-PATROLLER) (+ (- p.x cam-x) shake-x) (+ (- p.y cam-y) shake-y)
@@ -1541,7 +1504,6 @@
       (spr frame (+ (- f.x cam-x) shake-x) (+ (- f.y cam-y) shake-y) 0))))
 
 ;; Dessine les 4 checkpoints avec le bon sprite (actif/inactif).
-;; Le checkpoint B est cache si il n'a pas encore ete touche et correspond au spawn initial.
 (fn draw-checkpoints []
   (let [cx-a (* CHECKPOINT-A-TX TILE-SIZE) cy-a (* CHECKPOINT-A-TY TILE-SIZE)
         cx-b (* CHECKPOINT-B-TX TILE-SIZE) cy-b (* CHECKPOINT-B-TY TILE-SIZE)
@@ -1559,8 +1521,7 @@
     (spr spr-c (+ (- cx-c cam-x) shake-x) (+ (- cy-c cam-y) shake-y) 0)
     (spr spr-d (+ (- cx-d cam-x) shake-x) (+ (- cy-d cam-y) shake-y) 0)))
 
-;; Dessine les 4 flammes decoratives animees aux positions predefinies.
-;; Chaque flamme utilise flame-sprite qui cycle entre les frames 432-434.
+;; Dessine les 4 flammes decoratives animees.
 (fn draw-animated-flame []
   (let [fx   (* FLAME-TILE-X TILE-SIZE)   fy   (* FLAME-TILE-Y TILE-SIZE)
         fx-b (* FLAME-TILE-B-X TILE-SIZE) fy-b (* FLAME-TILE-B-Y TILE-SIZE)
@@ -1571,18 +1532,13 @@
     (spr flame-sprite (+ (- fx-c cam-x) shake-x FLAME-DRAW-OFFSET-X) (+ (- fy-c cam-y) shake-y FLAME-DRAW-OFFSET-Y) 0)
     (spr flame-sprite (+ (- fx-d cam-x) shake-x FLAME-DRAW-OFFSET-X) (+ (- fy-d cam-y) shake-y FLAME-DRAW-OFFSET-Y) 0)))
 
-;; Dessine le HUD : compteur de clones, compteur de fragments,
-;; statuts des competences debloquees et rappel des touches.
+;; Dessine le HUD.
 (fn draw-hud []
-  ;; Seul le compteur de fragments reste, en blanc (couleur 15)
   (print (.. "Fragments: " fragment-count "/" "4") 2 2 15)
-  ;; DEBUG temporaire : affiche le respawn actuel
   (print (.. "R:" respawn-x "," respawn-y) 2 10 7)
   (when spectator-mode (print "MODE SPECTATEUR" 86 26 11)))
 
-;; Dessine toute la scene de jeu : map, flammes, checkpoints, clones,
-;; trainee joueur, joueur, pieges, HUD et flash d'ecran.
-;; Utilise la camera (cam-x, cam-y) pour le scrolling et shake pour le tremblement.
+;; Dessine toute la scene de jeu.
 (fn draw-world []
   (let [tx0 (// cam-x TILE-SIZE) ty0 (// cam-y TILE-SIZE)
         ox (+ (- (% cam-x TILE-SIZE)) shake-x)
@@ -1598,15 +1554,13 @@
   (when (> state.flash 0) (rect 0 0 SCREEN-W SCREEN-H state.flash-color)))
 
 ;; Met a jour la camera pour qu'elle suive le joueur en douceur.
-;; Utilise un lerp de 0.18 pour un suivi fluide sans clamp de bords.
 (fn update-camera []
   (let [target-x (- (+ player.x 4) (/ SCREEN-W 2))
         target-y (- (+ player.y 4) (/ SCREEN-H 2))]
     (set cam-x (+ cam-x (* (- target-x cam-x) 0.18)))
     (set cam-y (+ cam-y (* (- target-y cam-y) 0.18)))))
 
-;; Gere l'ecran de menu principal : etoiles, soleil noir, titre, boutons START et OPTIONS.
-;; Demarre la musique au premier affichage. Lance init-game puis passe en :play.
+;; Gere l'ecran de menu principal.
 (fn update-menu []
   (cls 0)
   (when (not state.music-started) (music 0) (set state.music-started true))
@@ -1629,8 +1583,7 @@
       (init-game) (set state.mode :play))
     (set state.prev-start start-now)))
 
-;; Gere l'ecran d'options : toggle trainee du joueur et ailes.
-;; Navigation clavier et souris. Bouton RETOUR pour revenir au menu.
+;; Gere l'ecran d'options.
 (fn update-options []
   (cls 0) (animate-stars)
   (rect 24 20 192 96 1) (rectb 24 20 192 96 9)
@@ -1672,9 +1625,7 @@
   (rounded-rect 70 96 100 14 5 3)
   (print "RETOUR (A)" 96 100 15))
 
-;; Boucle principale de jeu : lit les inputs, met a jour physique, ennemis et
-;; systemes de jeu, puis dessine la scene.
-;; Enregistre les inputs du joueur chaque frame pour la creation de clones.
+;; Boucle principale de jeu.
 (fn update-play []
   (set state.timer (+ state.timer 1))
   (update-screen-shake)
@@ -1715,7 +1666,6 @@
       (mset (+ STELE2-X 1) (- STELE2-Y 1) SOLO-RIGHT-BLOCK-ID)
       (mset (+ STELE2-X 2) STELE2-Y SOLO-RIGHT2-BLOCK-ID)
       (set-end-tiles)
-      ;; Blocs de lave animes
       (mset 104 47 lava-sprite)
       (update-flame-animation)
       (if spectator-mode
@@ -1733,8 +1683,7 @@
           ))))
   (cls 0) (draw-world))
 
-;; Gere l'ecran de mort : compte 45 frames puis redirige vers le choix de clone
-;; (si le systeme est debloque) ou vers game-over (si 3 clones utilises).
+;; Gere l'ecran de mort.
 (fn update-death []
   (set state.timer (+ state.timer 1))
   (update-screen-shake)
@@ -1752,16 +1701,13 @@
   (print "Choix dans un instant..." 56 70 15))
 
 ;; Gere les inputs de l'ecran de choix apres la mort.
-;; Z/X/Haut = OUI (enregistrer la run comme clone).
-;; Bas/A = NON (relancer sans enregistrer).
 (fn update-death-choice []
   (let [choose-save (or (btnp 5) (btnp 4) (btnp 0))
         choose-skip (or (btnp 1) (btnp 6))]
     (when choose-save (save-current-run-as-clone) (start-attempt) (set state.mode :play))
     (when choose-skip (start-attempt) (set state.mode :play))))
 
-;; Dessine l'ecran de choix post-mort : boite de dialogue avec boutons OUI/NON,
-;; compteur de fantomes restants et indication des touches.
+;; Dessine l'ecran de choix post-mort.
 (fn draw-death-choice []
   (cls 0)
   (rect 40 35 160 66 0) (rectb 40 35 160 66 9)
@@ -1775,20 +1721,19 @@
         msg3 (.. "Fantomes dispo: " restants "/" MAX-CLONES)]
     (print msg3 (- 120 (* (string.len msg3) 3)) 100 12)))
 
-;; Gere l'etat game-over : n'importe quelle touche relance init-game et repasse en :play.
+;; Gere l'etat game-over.
 (fn update-game-over []
   (when (or (btn 4) (btn 5) (btn 0) (btn 1))
     (init-game) (set state.mode :play)))
 
-;; Dessine l'ecran de game-over : message rouge et indication pour recommencer.
+;; Dessine l'ecran de game-over.
 (fn draw-game-over []
   (cls 0)
   (print "GAME OVER" 86 44 2 0 0 false 2)
   (print "3 fantomes utilises." 78 70 7)
   (print "Z/X/Haut/Bas pour recommencer" 34 84 12))
 
-;; Gere l'ecran de victoire : attend le timer puis affiche le message YOU WIN.
-;; Le fond reste noir pendant le flash initial puis passe au vert.
+;; Gere l'ecran de victoire.
 (fn update-win []
   (set state.timer (+ state.timer 1))
   (update-screen-shake)
@@ -1818,8 +1763,6 @@
       (print "HAUT/BAS + Z/X" 78 108 13))))
 
 ;; Boucle principale TIC-80 : appelee 60 fois par seconde.
-;; Met a jour les sons, initialise les etoiles si besoin, incremente le temps titre,
-;; puis dispatche vers la bonne fonction selon l'etat courant du jeu.
 (global TIC (fn []
   (update-sound-sequence)
   (when (= (list-length stars) 0) (init-stars))
