@@ -11,7 +11,7 @@
     { "key": "Espace", "action": "Commencer une partie" },
     { "key": "← ↑ ↓ →", "action": "Déplacer le fenouil" }
   ],
-  "sourceDir": "Dodge! (QBitSoft)",
+  "sourceDir": "Dodge",
   "coverPath": "cover.png",
   "build": ["load assets/game.tic"]
 }

@@ -15,7 +15,7 @@
     { "key": "A", "action": "Mode spectateur on/off" },
     { "key": "K", "action": "Interaction avec la structure de fin" }
   ],
-  "sourceDir": "echo-clone-souls",
+  "sourceDir": "Echo-Clone",
   "coverPath": "cover.png",
   "build": [
     "load assets/sprites.tic",
