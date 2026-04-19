@@ -16,5 +16,5 @@
   ],
   "sourceDir": "Zigoto-Quest",
   "coverPath": "cover.png",
-  "build": ["load assets/game.tic", "import code src/main.fnl"]
+  "build": ["import code src/main.lua"]
 }
