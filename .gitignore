@@ -34,6 +34,8 @@ desktop.ini
 *.sw?
 */.local/
 .local/
+node_modules/
+*/node_modules/
 
 # QBitSoft
 'Dodge! (QBitSoft)'/src/main_.fnl
