@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  push:
+    branches: ["main", "web/**"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install TIC-80
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb unzip
+          curl -L -o tic80.zip https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-v1.1.2837-linux.zip
+          unzip tic80.zip -d "$HOME/tic80"
+          chmod +x "$HOME/tic80/tic80"
+          echo "$HOME/tic80" >> "$GITHUB_PATH"
+
+      - name: Install web deps
+        working-directory: web
+        run: npm ci
+
+      - name: Build TIC-80 exports
+        working-directory: web
+        run: npm run build:tic
+
+      - name: Build site
+        working-directory: web
+        env:
+          BASE_URL: "/24h-coder-2026/"
+        run: npx tsc -b && npx vite build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist

@@ -42,3 +42,11 @@ desktop.ini
 
 echo-clone-souls/presentation-projet-24h.pptx
 ./.local
+
+# web (Vite app)
+web/node_modules/
+web/dist/
+web/.tmp/
+web/public/games/
+web/public/covers/
+web/src/data/games.generated.ts
