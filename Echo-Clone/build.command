@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e  # arrêt immédiat si une commande échoue
 
+cd Nextcloud/cours/projets-perso/24h-coder-2026/Echo-Clone
+
 cat \
   src/constants.fnl \
   src/state.fnl \
