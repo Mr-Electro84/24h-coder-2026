@@ -8,9 +8,9 @@
 
 **Branche de travail** : `web/v0.1`.
 
-**Dernière action** : Étapes 1-12 validées localement. Workflow CI mis à jour : correctif `xvfb-run -a` sur build:tic, job `deploy` conditionné à `main` (GitHub Pages), `concurrency` anti-concurrent.
+**Dernière action** : CI + déploiement GitHub Pages en place. Runtime TIC-80 (`tic80.js` + `tic80.wasm`) factorisé dans `_shared/` pour mutualiser le cache navigateur entre jeux. Prefetch du wasm dès l'arrivée sur le site (`App.tsx`). Spinner « Chargement du jeu… » affiché après le clic « Cliquez pour jouer » jusqu'au `postMessage({ticReady: true})` émis par `Module.onRuntimeInitialized` injecté dans l'HTML patché.
 
-**Prochaine étape** : Push `web/v0.1`, ouvrir PR vers `main` → vérifier CI verte → merger → activer Pages (Settings → Pages → Source = "GitHub Actions") → visiter l'URL publique.
+**Prochaine étape** : Vérifier en prod (GitHub Pages) que : (a) prefetch démarre au chargement de la galerie ; (b) spinner disparaît quand le jeu est jouable ; (c) charger un 2ᵉ jeu est quasi-instantané grâce au cache `_shared/`.
 
 ## État du repo (snapshot à la création de ce fichier)
 
@@ -101,7 +101,8 @@ Voir [SPECS.md §Vérification end-to-end](SPECS.md#vérification-end-to-end). L
 
 ## Journal des mises à jour
 
-- **2026-04-20** : Workflow CI finalisé : `xvfb-run -a` sur `build:tic` (correctif headless Linux), job `deploy` vers GitHub Pages conditionné à `main`, `concurrency` anti-concurrent. Docs (SPECS, CLAUDE, STATE) mis à jour pour refléter hosting activé.
+- **2026-04-20** : Optimisations perf GH Pages. (1) Factorisation `tic80.js`/`tic80.wasm` dans `public/games/_shared/` + patch regex (quotes simples **et** doubles) des chemins dans l'HTML exporté et dans le JS runtime. (2) `#game-frame` auto-caché → le JS TIC-80 démarre le fetch du wasm sans attendre de clic interne. (3) Prefetch des runtimes injecté au mount de `App.tsx`. (4) `Module.onRuntimeInitialized` patché pour `postMessage({ticReady: true})` au parent ; `PlayerFrame` écoute ce message pour masquer le spinner. (5) Préfixe `$` shell dans le `build` array essayé puis retiré (pas grave, `build.fnl` d'Echo-Clone est commité à jour).
+- **2026-04-20** : Workflow CI finalisé : `xvfb-run -a` sur `build:tic` (correctif headless Linux), job `deploy` vers GitHub Pages conditionné à `main`, `concurrency` anti-concurrent. Correctif URL release TIC-80 (`.deb` Linux, pas `.zip`). Docs (SPECS, CLAUDE, STATE) mis à jour pour refléter hosting activé.
 - **2026-04-19** : Implémentation complète des étapes 1, 3-12. Pipeline TIC-80 → exports HTML → galerie React validé en local (3/3 jeux, test de généricité OK avec ajout/retrait d'un 4ᵉ jeu factice). Build prod (`vite build`) passe. Reste : push + valider la CI.
 - **2026-04-19** : Plan validé avec l'utilisateur. Création de `CLAUDE.md`, `SPECS.md`, `STATE.md`. Aucune tâche d'implémentation entamée.
 - **2026-04-19** : Clarification — les participants du hackathon ajouteront leurs propres jeux. Architecture durcie autour de l'auto-découverte (aucune liste en dur). Ajout d'un guide participant dans SPECS, d'un test de généricité dans la checklist, et d'une étape README.
