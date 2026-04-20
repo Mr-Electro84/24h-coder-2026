@@ -48,7 +48,7 @@ export function GamePage() {
           )}
           <p style={{ fontSize: "0.85rem", marginTop: "1rem" }}>
             <a
-              href={`https://github.com/Lucas-Rosenzweig/24h-coder-2026/tree/main/${encodeURIComponent(game.sourceDir)}`}
+              href="https://github.com/BDE-CERI/24h-coder-2026"
               target="_blank"
               rel="noreferrer"
             >

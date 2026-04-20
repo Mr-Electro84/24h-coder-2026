@@ -8,7 +8,7 @@ export function Layout() {
           <Link to="/">24h pour coder 2026</Link>
         </h1>
         <a
-          href="https://github.com/Lucas-Rosenzweig/24h-coder-2026"
+          href="https://github.com/BDE-CERI/24h-coder-2026"
           target="_blank"
           rel="noreferrer"
         >
