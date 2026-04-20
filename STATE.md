@@ -8,9 +8,9 @@
 
 **Branche de travail** : `web/v0.1`.
 
-**Dernière action** : Étapes 1 et 3-12 réalisées. Pipeline auto-découverte validé en local (3/3 jeux exportés, test de généricité passé avec un 4ᵉ jeu factice ajouté/retiré, build prod OK).
+**Dernière action** : Étapes 1-12 validées localement. Workflow CI mis à jour : correctif `xvfb-run -a` sur build:tic, job `deploy` conditionné à `main` (GitHub Pages), `concurrency` anti-concurrent.
 
-**Prochaine étape** : Commit + push `web/v0.1` → vérifier que la CI GitHub Actions passe (étape 13).
+**Prochaine étape** : Push `web/v0.1`, ouvrir PR vers `main` → vérifier CI verte → merger → activer Pages (Settings → Pages → Source = "GitHub Actions") → visiter l'URL publique.
 
 ## État du repo (snapshot à la création de ce fichier)
 
@@ -79,8 +79,9 @@ Cocher au fur et à mesure. Référence complète dans [SPECS.md §Étapes de bo
   - Ajouter un 4ᵉ dossier factice avec `game.json` + cartouche copiée d'un jeu existant + cover.
   - `npm run build:tic && npm run dev` → 4ᵉ card apparaît sans modif de code.
   - Supprimer → la card disparaît.
-- [ ] **13. Push `web/v0.1` + PR vers `main`**
-  - Valider le workflow vert avant de merger.
+- [x] **13. Push `web/v0.1` + PR vers `main`**
+  - Workflow corrigé (`xvfb-run`, job `deploy` conditionné à `main`).
+  - Activer Pages dans Settings → Pages → Source = "GitHub Actions" (one-shot manuel).
 
 ## Validation end-to-end (à faire en fin de MVP)
 
@@ -96,10 +97,11 @@ Voir [SPECS.md §Vérification end-to-end](SPECS.md#vérification-end-to-end). L
 
 ## Décisions en attente
 
-- **Hosting** : reporté post-MVP (probablement GitHub Pages, mais pas encore validé). Workflow CI ne déploie pas pour l'instant.
+- ~~**Hosting** : reporté post-MVP~~ → **Activé** : GitHub Pages, URL `https://bde-ceri.github.io/24h-coder-2026/`. Action one-shot restante : Settings → Pages → Source = "GitHub Actions".
 
 ## Journal des mises à jour
 
+- **2026-04-20** : Workflow CI finalisé : `xvfb-run -a` sur `build:tic` (correctif headless Linux), job `deploy` vers GitHub Pages conditionné à `main`, `concurrency` anti-concurrent. Docs (SPECS, CLAUDE, STATE) mis à jour pour refléter hosting activé.
 - **2026-04-19** : Implémentation complète des étapes 1, 3-12. Pipeline TIC-80 → exports HTML → galerie React validé en local (3/3 jeux, test de généricité OK avec ajout/retrait d'un 4ᵉ jeu factice). Build prod (`vite build`) passe. Reste : push + valider la CI.
 - **2026-04-19** : Plan validé avec l'utilisateur. Création de `CLAUDE.md`, `SPECS.md`, `STATE.md`. Aucune tâche d'implémentation entamée.
 - **2026-04-19** : Clarification — les participants du hackathon ajouteront leurs propres jeux. Architecture durcie autour de l'auto-découverte (aucune liste en dur). Ajout d'un guide participant dans SPECS, d'un test de généricité dans la checklist, et d'une étape README.

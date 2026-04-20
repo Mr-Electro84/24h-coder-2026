@@ -1,10 +1,14 @@
-name: Build
+name: Build and Deploy
 
 on:
   push:
     branches: ["main", "web/**"]
   pull_request:
   workflow_dispatch:
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -38,7 +42,7 @@ jobs:
 
       - name: Build TIC-80 exports
         working-directory: web
-        run: npm run build:tic
+        run: xvfb-run -a npm run build:tic
 
       - name: Build site
         working-directory: web
@@ -46,6 +50,19 @@ jobs:
           BASE_URL: "/24h-coder-2026/"
         run: npx tsc -b && npx vite build
 
+      - uses: actions/configure-pages@v5
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web/dist
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

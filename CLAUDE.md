@@ -44,7 +44,7 @@ Le pipeline gère cette hétérogénéité via un champ **`build`** dans `game.j
 - **Métadonnées** : un `game.json` par dossier jeu.
 - **Covers** : un `cover.png` manuel par dossier jeu.
 - **CI** : GitHub Actions pour builder les exports + le site.
-- **Hosting** : reporté (probablement GitHub Pages plus tard — le workflow valide juste le build pour l'instant).
+- **Hosting** : GitHub Pages via workflow `build.yml` (job `deploy`, conditionné à `main`). URL : `https://bde-ceri.github.io/24h-coder-2026/`. Activation one-shot : Settings → Pages → Source = "GitHub Actions".
 - **Scope MVP** : galerie (cards) + page jeu (player + contrôles + description). Pas de recherche, pas de filtres, pas de mobile tactile.
 
 Détails complets → [SPECS.md](SPECS.md).
@@ -102,6 +102,5 @@ npm run preview          # servir le build de prod
 - **Ne jamais hardcoder une liste de jeux** dans le code, la config, ou la CI. Toujours globber les `*/game.json`.
 - **Ne jamais casser un jeu existant** quand on ajoute une feature. Le pipeline doit rester "dossier + game.json = jeu".
 - Ne pas utiliser Tailwind (trop lourd pour 2 pages — voir SPECS).
-- Ne pas introduire un job de déploiement CI tant que l'hosting n'est pas décidé.
 - Ne pas modifier les jeux eux-mêmes (code Fennel/Lua, cartouches `.tic`, assets). Si un jeu n'a pas de cartouche prête, ce n'est pas un bug à corriger côté jeu : c'est au `build` du `game.json` de décrire comment l'assembler.
 - Ne pas commit les fichiers générés (`games.generated.ts`, `public/games/`, `public/covers/`).

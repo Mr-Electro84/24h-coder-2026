@@ -229,11 +229,14 @@ Pour tout nouveau jeu ajouté par un participant, voir le §Guide participant.
 `.github/workflows/build.yml` :
 
 ```yaml
-name: Build
+name: Build and Deploy
 on:
   push: { branches: ["main", "web/**"] }
   pull_request:
   workflow_dispatch:
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 permissions: { contents: read, pages: write, id-token: write }
 jobs:
   build:
@@ -253,20 +256,40 @@ jobs:
           unzip tic80.zip -d "$HOME/tic80"
           chmod +x "$HOME/tic80/tic80"
           echo "$HOME/tic80" >> "$GITHUB_PATH"
-      - working-directory: web
+      - name: Install web deps
+        working-directory: web
         run: npm ci
-      - name: Build TIC exports
+      - name: Build TIC-80 exports
         working-directory: web
         run: xvfb-run -a npm run build:tic
       - name: Build site
         working-directory: web
         env: { BASE_URL: "/24h-coder-2026/" }
-        run: npm run build
+        run: npx tsc -b && npx vite build
+      - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with: { path: web/dist }
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
 ```
 
-Un job `deploy` (conditionné à `main`) sera ajouté quand l'hébergement sera décidé. Pour l'instant le workflow valide juste le build sur chaque push/PR.
+Le job `deploy` est **conditionné à `main`** : les PRs et branches `web/**` valident le build sans publier. Le déploiement cible **https://bde-ceri.github.io/24h-coder-2026/**.
+
+### Activation GitHub Pages (one-shot, à faire une seule fois)
+
+Dans **Settings → Pages** du repo GitHub :
+- **Source** : sélectionner **"GitHub Actions"** (pas "Deploy from a branch").
+
+Sans cette configuration, le job `deploy` échoue. Cette action est manuelle et ne peut pas être scriptée.
 
 ## Points de vigilance
 
