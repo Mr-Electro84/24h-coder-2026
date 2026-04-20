@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 
 export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
   const [active, setActive] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const src = `${import.meta.env.BASE_URL}games/${slug}/index.html`;
@@ -44,8 +45,15 @@ export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
           title={title}
           allow="fullscreen; gamepad"
           tabIndex={0}
+          onLoad={() => setLoaded(true)}
         />
-        {!active && (
+        {!loaded && (
+          <div className="player-overlay player-overlay--loading" aria-live="polite">
+            <span className="player-spinner" aria-hidden="true" />
+            Chargement…
+          </div>
+        )}
+        {loaded && !active && (
           <button
             type="button"
             className="player-overlay"

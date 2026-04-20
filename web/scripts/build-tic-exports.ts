@@ -1,5 +1,5 @@
 import { execFileSync, spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { discoverGames, type DiscoveredGame } from "./discover-games.js";
@@ -9,6 +9,7 @@ const WEB_DIR = resolve(__dirname, "..");
 const REPO_ROOT = resolve(WEB_DIR, "..");
 const TMP_DIR = join(WEB_DIR, ".tmp");
 const GAMES_OUT = join(WEB_DIR, "public", "games");
+const SHARED_OUT = join(GAMES_OUT, "_shared");
 const COVERS_OUT = join(WEB_DIR, "public", "covers");
 const GENERATED = join(WEB_DIR, "src", "data", "games.generated.ts");
 
@@ -68,9 +69,29 @@ function buildOne(bin: string, game: DiscoveredGame): string | null {
   const outDir = join(GAMES_OUT, slug);
   rmSync(outDir, { recursive: true, force: true });
   unzip(zipPath, outDir);
-  if (!existsSync(join(outDir, "index.html"))) {
+  const indexPath = join(outDir, "index.html");
+  if (!existsSync(indexPath)) {
     console.error(`  ✗ ${slug}: pas de index.html dans l'export`);
     return null;
+  }
+
+  const localJs = join(outDir, "tic80.js");
+  const localWasm = join(outDir, "tic80.wasm");
+  const sharedJs = join(SHARED_OUT, "tic80.js");
+  const sharedWasm = join(SHARED_OUT, "tic80.wasm");
+  if (existsSync(localJs) && existsSync(localWasm)) {
+    if (!existsSync(sharedJs) || !existsSync(sharedWasm)) {
+      mkdirSync(SHARED_OUT, { recursive: true });
+      renameSync(localJs, sharedJs);
+      renameSync(localWasm, sharedWasm);
+      const patched = readFileSync(sharedJs, "utf8").replaceAll('"tic80.wasm"', '"../_shared/tic80.wasm"');
+      writeFileSync(sharedJs, patched);
+    } else {
+      rmSync(localJs);
+      rmSync(localWasm);
+    }
+    const html = readFileSync(indexPath, "utf8").replaceAll('"tic80.js"', '"../_shared/tic80.js"');
+    writeFileSync(indexPath, html);
   }
 
   mkdirSync(COVERS_OUT, { recursive: true });
@@ -109,6 +130,7 @@ function main() {
   console.log(`TIC-80: ${bin}`);
 
   mkdirSync(TMP_DIR, { recursive: true });
+  rmSync(SHARED_OUT, { recursive: true, force: true });
   mkdirSync(GAMES_OUT, { recursive: true });
 
   const built: DiscoveredGame[] = [];
