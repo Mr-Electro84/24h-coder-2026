@@ -52,7 +52,7 @@
 (global CHECKPOINT-B-TX 119)
 (global CHECKPOINT-B-TY 64)
 (global CHECKPOINT-C-TX 30)
-(global CHECKPOINT-C-TY 36)
+(global CHECKPOINT-C-TY 35)
 (global CHECKPOINT-D-TX 213)
 (global CHECKPOINT-D-TY 87)
 (global DOOR-TX 118)
@@ -236,6 +236,7 @@
 (var spectator-mode false)
 (var flame-sprite 432)
 (var lava-sprite 47)
+(var lava-tiles [])
 (var fragment-collected false)
 (var dash-fragment-collected false)
 (var fire-fragment-collected false)
@@ -750,6 +751,14 @@
      :vx 0.6 :min-x (* FLYER-MIN-TX TILE-SIZE) :max-x (* FLYER-MAX-TX TILE-SIZE)
      :sprite FLYER-SPRITE :alive true}))
 
+(fn scan-lava-tiles []
+  (set lava-tiles [])
+  (for [ty 0 (- MAP-TILES-H 1)]
+    (for [tx 0 (- MAP-TILES-W 1)]
+      (let [tile (mget tx ty)]
+        (when (or (= tile 47) (= tile 159))
+          (table.insert lava-tiles {:tx tx :ty ty}))))))
+
 ;; Demarre une nouvelle tentative : reinitialise le joueur au dernier checkpoint,
 ;; vide l'enregistrement courant et instancie les clones depuis les runs precedentes.
 (fn start-attempt []
@@ -805,7 +814,9 @@
   (set-door-tiles DOOR3-TX DOOR3-TY DOOR-CLOSED-TL DOOR-CLOSED-TR DOOR-CLOSED-BL DOOR-CLOSED-BR)
   (set-door-tiles DOOR4-TX DOOR4-TY DOOR-CLOSED-TL DOOR-CLOSED-TR DOOR-CLOSED-BL DOOR-CLOSED-BR)
   (scan-level-traps)
-  (start-attempt))
+  (scan-lava-tiles) 
+  (start-attempt)) 
+
 
 ;; Gere l'animation de tremblement de l'ecran.
 ;; Decremente le timer et applique un offset aleatoire tant qu'il reste du shake.
@@ -1072,6 +1083,7 @@
     (teleport-player-to-spawn-door)))
 
 ;; Deplace le joueur en mode spectateur libre (sans physique ni collision).
+;; Deplace le joueur en mode spectateur libre (sans physique ni collision).
 (fn update-spectator-player [entity input-left input-right input-up input-down]
   (let [w (or entity.w 8) h (or entity.h 8)
         max-x (- (* MAP-TILES-W TILE-SIZE) w)
@@ -1079,9 +1091,11 @@
         dx (+ (if input-right SPECTATOR-SPEED 0)
               (if input-left (- 0 SPECTATOR-SPEED) 0))
         dy (+ (if input-down SPECTATOR-SPEED 0)
-              (if input-up (- 0 SPECTATOR-SPEED) 0))]
-    (set entity.x (clamp (+ entity.x dx) 0 max-x))
-    (set entity.y (clamp (+ entity.y dy) 0 max-y))
+              (if input-up (- 0 SPECTATOR-SPEED) 0))
+        nx (+ entity.x dx)
+        ny (+ entity.y dy)]
+    (set entity.x (if (< nx 0) max-x (if (> nx max-x) 0 nx)))
+    (set entity.y (if (< ny 0) max-y (if (> ny max-y) 0 ny)))
     (set entity.vx 0) (set entity.vy 0) (set entity.on-ground false)))
 
 ;; Anime les flammes decoratives en cyclant entre 3 frames (432, 433, 434).
@@ -1534,9 +1548,11 @@
 
 ;; Dessine le HUD.
 (fn draw-hud []
-  (print (.. "Fragments: " fragment-count "/" "4") 2 2 15)
-  (print (.. "R:" respawn-x "," respawn-y) 2 10 7)
-  (when spectator-mode (print "MODE SPECTATEUR" 86 26 11)))
+  (print (.. "Fragments: " fragment-count "/" "4") 2 2 7)
+  (when spectator-mode
+    (print "MODE SPECTATEUR" 86 26 7)
+    (print (.. "R:" respawn-x "," respawn-y) 2 10 7)
+    (print (.. "P:" (math.floor player.x) "," (math.floor player.y)) 2 20 7)))
 
 ;; Dessine toute la scene de jeu.
 (fn draw-world []
