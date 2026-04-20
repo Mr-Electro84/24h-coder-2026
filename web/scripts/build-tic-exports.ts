@@ -84,13 +84,13 @@ function buildOne(bin: string, game: DiscoveredGame): string | null {
       mkdirSync(SHARED_OUT, { recursive: true });
       renameSync(localJs, sharedJs);
       renameSync(localWasm, sharedWasm);
-      const patched = readFileSync(sharedJs, "utf8").replaceAll('"tic80.wasm"', '"../_shared/tic80.wasm"');
+      const patched = readFileSync(sharedJs, "utf8").replace(/(['"])tic80\.wasm\1/g, "$1../_shared/tic80.wasm$1");
       writeFileSync(sharedJs, patched);
     } else {
       rmSync(localJs);
       rmSync(localWasm);
     }
-    const html = readFileSync(indexPath, "utf8").replaceAll('"tic80.js"', '"../_shared/tic80.js"');
+    const html = readFileSync(indexPath, "utf8").replace(/(['"])tic80\.js\1/g, "$1../_shared/tic80.js$1");
     writeFileSync(indexPath, html);
   }
 
