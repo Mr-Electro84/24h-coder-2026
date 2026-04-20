@@ -31,10 +31,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y xvfb unzip
-          curl -L -o tic80.zip https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-v1.1.2837-linux.zip
-          unzip tic80.zip -d "$HOME/tic80"
-          chmod +x "$HOME/tic80/tic80"
-          echo "$HOME/tic80" >> "$GITHUB_PATH"
+          curl -fL -o tic80.deb https://github.com/nesbox/TIC-80/releases/download/v1.1.2837/tic80-v1.1-linux.deb
+          sudo apt-get install -y ./tic80.deb
+          tic80 --version || true
 
       - name: Install web deps
         working-directory: web
