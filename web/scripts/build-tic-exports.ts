@@ -90,7 +90,19 @@ function buildOne(bin: string, game: DiscoveredGame): string | null {
       rmSync(localJs);
       rmSync(localWasm);
     }
-    const html = readFileSync(indexPath, "utf8").replace(/(['"])tic80\.js\1/g, "$1../_shared/tic80.js$1");
+    let html = readFileSync(indexPath, "utf8").replace(/(['"])tic80\.js\1/g, "$1../_shared/tic80.js$1");
+    html = html.replace("/* #game-frame { display: none; } */", "#game-frame { display: none; }");
+    html = html.replace(
+      '<link rel="icon"',
+      '<link rel="preload" as="fetch" href="../_shared/tic80.wasm" crossorigin>\n    <link rel="icon"'
+    );
+    if (!html.includes('<link rel="preload" as="fetch" href="../_shared/tic80.wasm"')) {
+      html = html.replace("</head>", '    <link rel="preload" as="fetch" href="../_shared/tic80.wasm" crossorigin>\n</head>');
+    }
+    html = html.replace(
+      /var Module = \{[^}]*\}/,
+      (match) => match + ";\nModule.onRuntimeInitialized = function () { try { parent.postMessage({ ticReady: true }, '*'); } catch (e) {} }"
+    );
     writeFileSync(indexPath, html);
   }
 

@@ -2,13 +2,28 @@ import { useEffect, useRef, useState } from "react";
 
 export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
   const [active, setActive] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [ready, setReady] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const src = `${import.meta.env.BASE_URL}games/${slug}/index.html`;
 
   useEffect(() => {
-    if (!active) return;
+    const onMessage = (e: MessageEvent) => {
+      if (
+        e.source === iframeRef.current?.contentWindow &&
+        e.data &&
+        typeof e.data === "object" &&
+        (e.data as { ticReady?: boolean }).ticReady
+      ) {
+        setReady(true);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
+
+  useEffect(() => {
+    if (!active || !ready) return;
     iframeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (
@@ -24,7 +39,7 @@ export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
     };
     window.addEventListener("keydown", onKey, { capture: true });
     return () => window.removeEventListener("keydown", onKey, { capture: true });
-  }, [active]);
+  }, [active, ready]);
 
   const fullscreen = () => {
     const el = containerRef.current;
@@ -45,15 +60,8 @@ export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
           title={title}
           allow="fullscreen; gamepad"
           tabIndex={0}
-          onLoad={() => setLoaded(true)}
         />
-        {!loaded && (
-          <div className="player-overlay player-overlay--loading" aria-live="polite">
-            <span className="player-spinner" aria-hidden="true" />
-            Chargement…
-          </div>
-        )}
-        {loaded && !active && (
+        {!active && (
           <button
             type="button"
             className="player-overlay"
@@ -61,6 +69,12 @@ export function PlayerFrame({ slug, title }: { slug: string; title: string }) {
           >
             ▶ Cliquez pour jouer
           </button>
+        )}
+        {active && !ready && (
+          <div className="player-overlay player-overlay--loading" aria-live="polite">
+            <span className="player-spinner" aria-hidden="true" />
+            Chargement du jeu…
+          </div>
         )}
       </div>
       <div className="player-controls">
