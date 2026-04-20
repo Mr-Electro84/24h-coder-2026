@@ -1,0 +1,17 @@
+{
+  "id": "dodge",
+  "title": "Dodge!",
+  "team": "QBitSoft",
+  "authors": ["QBitSoft"],
+  "description": "Un petit fenouil rêve de devenir un beau légume. Aide-le à gober des nutriments tout en esquivant les mouches !",
+  "longDescription": "Déplace le petit fenouil dans l'espace. Quand un nutriment apparaît, fonce pour l'ingérer en le touchant !\n\n- Les nutriments **normaux** (bleus) octroient **100 points**\n- Les nutriments **spéciaux** (dorés) octroient **500 points**\n\nGagne le plus de points possible pour faire le meilleur score ! Quand une mouche apparaît, esquive-la tout de suite — toucher la moindre mouche provoque un *Game Over*.",
+  "genre": "Arcade",
+  "language": "Lua",
+  "controls": [
+    { "key": "Espace", "action": "Commencer une partie" },
+    { "key": "← ↑ ↓ →", "action": "Déplacer le fenouil" }
+  ],
+  "sourceDir": "Dodge",
+  "coverPath": "cover.png",
+  "build": ["load assets/game.tic"]
+}

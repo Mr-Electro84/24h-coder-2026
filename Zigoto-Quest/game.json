@@ -1,0 +1,20 @@
+{
+  "id": "zigoto-quest",
+  "title": "Les Zigotos V3",
+  "team": "Les Zigotos",
+  "authors": ["Les Zigotos"],
+  "description": "Un roguelike d'action rapide : enchaînez les salles, choisissez vos récompenses, et survivez jusqu'au boss.",
+  "longDescription": "Vous incarnez un aventurier qui traverse une série de salles remplies d'ennemis. La progression suit une boucle simple : 4 salles de combat, 1 boutique pour vous soigner ou vous renforcer, 1 salle de boss. Après chaque combat gagné, vous obtenez une carte de récompense pour personnaliser votre partie (attaque, sort ou utilitaire). Le but est de tenir le plus longtemps possible en enchaînant les cycles.",
+  "genre": "Roguelike",
+  "language": "Fennel",
+  "controls": [
+    { "key": "← ↑ ↓ →", "action": "Se déplacer" },
+    { "key": "E", "action": "Attaque principale" },
+    { "key": "A", "action": "Sort" },
+    { "key": "Z", "action": "Utilitaire" },
+    { "key": "X", "action": "Valider (menu, récompenses, achats)" }
+  ],
+  "sourceDir": "Zigoto-Quest",
+  "coverPath": "cover.png",
+  "build": ["import code src/main.lua"]
+}

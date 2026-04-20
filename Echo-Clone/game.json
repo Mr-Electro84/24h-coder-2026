@@ -1,0 +1,24 @@
+{
+  "id": "echo-clone-souls",
+  "title": "Echo Clone",
+  "team": "Echo Clone",
+  "authors": ["Echo Clone"],
+  "description": "Un platformer où vos clones des runs précédentes deviennent des plateformes. Collectez les fragments pour débloquer dash et boules de feu.",
+  "longDescription": "Le cœur du jeu repose sur les clones de runs précédentes, les compétences débloquées par fragments, et des pièges dynamiques.\n\n- Le joueur peut enregistrer et rejouer des runs fantômes (max 3 clones).\n- Les clones immobiles servent de plateformes.\n- 4 fragments à collecter pour débloquer les capacités principales.\n- Ennemis : patrouilleurs, tireurs, chasseurs, rollers, flyers, projectiles.\n- Checkpoints actifs avec respawn sur le dernier touché.\n- Interaction de fin : sur la structure finale, K change le skin du joueur et déclenche la victoire.",
+  "genre": "Platformer",
+  "language": "Fennel",
+  "controls": [
+    { "key": "← →", "action": "Déplacement" },
+    { "key": "↑", "action": "Saut" },
+    { "key": "Z / X", "action": "Dash (après déblocage)" },
+    { "key": "Y / V", "action": "Tir de boule de feu (après déblocage)" },
+    { "key": "A", "action": "Mode spectateur on/off" },
+    { "key": "K", "action": "Interaction avec la structure de fin" }
+  ],
+  "sourceDir": "Echo-Clone",
+  "coverPath": "cover.png",
+  "build": [
+    "load assets/sprites.tic",
+    "import code src/main.fnl"
+  ]
+}

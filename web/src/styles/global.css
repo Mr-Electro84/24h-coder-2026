@@ -1,0 +1,269 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700&display=swap");
+
+:root {
+  --bg: #0f0f1a;
+  --bg-2: #1a1a2e;
+  --fg: #f2f2f2;
+  --fg-dim: #a0a0b8;
+  --accent: #e94560;
+  --border: #2a2a44;
+  --pixel-font: "Press Start 2P", system-ui, monospace;
+  --body-font: "Inter", system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--body-font);
+  min-height: 100vh;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+img.pixel {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layout-header {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.layout-header h1 {
+  font-family: var(--pixel-font);
+  font-size: 1rem;
+  margin: 0;
+  color: var(--accent);
+}
+
+.layout-header h1 a {
+  color: inherit;
+}
+
+.layout-main {
+  flex: 1;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.layout-footer {
+  border-top: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  text-align: center;
+  color: var(--fg-dim);
+  font-size: 0.875rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+}
+
+.game-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s, border-color 0.15s;
+  color: var(--fg);
+}
+
+.game-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.game-card img {
+  width: 100%;
+  aspect-ratio: 240 / 136;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.game-card-body {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.game-card h2 {
+  font-family: var(--pixel-font);
+  font-size: 0.75rem;
+  margin: 0 0 0.5rem;
+  line-height: 1.4;
+}
+
+.game-card-meta {
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.game-page {
+  display: grid;
+  grid-template-columns: minmax(0, 720px) 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .game-page {
+    grid-template-columns: 1fr;
+  }
+}
+
+.game-page h1 {
+  font-family: var(--pixel-font);
+  font-size: 1.25rem;
+  margin: 0 0 0.5rem;
+}
+
+.game-page .team {
+  color: var(--fg-dim);
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+}
+
+.player-frame {
+  position: relative;
+  width: 720px;
+  max-width: 100%;
+  aspect-ratio: 720 / 408;
+  background: #000;
+  border: 1px solid var(--border);
+}
+
+.player-frame iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.player-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 15, 26, 0.85);
+  color: var(--fg);
+  font-family: var(--pixel-font);
+  font-size: 0.875rem;
+  cursor: pointer;
+  text-align: center;
+  padding: 1rem;
+}
+
+.player-controls {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.player-controls button {
+  background: var(--bg-2);
+  color: var(--fg);
+  border: 1px solid var(--border);
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.player-controls button:hover {
+  border-color: var(--accent);
+}
+
+.controls-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.9rem;
+}
+
+.controls-table th,
+.controls-table td {
+  text-align: left;
+  padding: 0.4rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.controls-table th {
+  color: var(--fg-dim);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.controls-table code {
+  background: var(--bg-2);
+  padding: 0.1rem 0.4rem;
+  border-radius: 3px;
+}
+
+.long-desc {
+  line-height: 1.6;
+}
+
+.long-desc p {
+  margin: 0.5rem 0;
+}
+
+.mobile-warning {
+  display: none;
+  background: var(--bg-2);
+  border: 1px solid var(--accent);
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .mobile-warning {
+    display: block;
+  }
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+}

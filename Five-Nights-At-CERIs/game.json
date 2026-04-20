@@ -1,0 +1,19 @@
+{
+  "id": "five-nights-at-ceris",
+  "title": "Five Nights At CERI's",
+  "team": "Manchot Analfabete",
+  "authors": ["Manchot Analfabete"],
+  "description": "Un jeu d'horreur point-and-click dans les locaux du CERI. Surveille les caméras, gere ton energie et repousse les menaces avant la panne.",
+  "longDescription": "Tu passes la nuit au CERI pendant que plusieurs ennemis essaient de t'atteindre.\n\n- Requin : clique rapidement quand il attaque.\n- Nodes : fais clignoter la lumiere 3 fois pour le repousser.\n- Yeux rouges : ferme le rideau quand il arrive.\n- Batterie : surveille le generateur et recharge avant 0.",
+  "genre": "Horror",
+  "language": "Fennel",
+  "controls": [
+    { "key": "Souris (clic gauche)", "action": "Interagir avec le bureau et les cameras" },
+    { "key": "Souris (clic rapide)", "action": "Repousser le requin pendant l'attaque" },
+    { "key": "Bouton lumiere (x3)", "action": "Repousser Nodes" },
+    { "key": "Bouton rideau", "action": "Repousser les yeux rouges" }
+  ],
+  "sourceDir": "Five-Nights-At-CERIs",
+  "coverPath": "assets/sprites.png",
+  "build": ["load assets/game.tic"]
+}
