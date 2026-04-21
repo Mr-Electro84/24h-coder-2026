@@ -28,6 +28,11 @@ export function GamePage() {
         </div>
         <aside>
           <h1>{game.title}</h1>
+          {game.award && (
+            <span className={`game-badge game-badge--${game.award}`}>
+              {game.award === "jury" ? "🏆 Prix du jury" : "❤️ Coup de cœur du public"}
+            </span>
+          )}
           <p className="team">par {game.team} · {game.genre} · {game.language}</p>
           <p>{game.description}</p>
           <h3 style={{ fontFamily: "var(--pixel-font)", fontSize: "0.75rem" }}>Contrôles</h3>
@@ -48,7 +53,7 @@ export function GamePage() {
           )}
           <p style={{ fontSize: "0.85rem", marginTop: "1rem" }}>
             <a
-              href="https://github.com/BDE-CERI/24h-coder-2026"
+              href={game.repoUrl ?? "https://github.com/BDE-CERI/24h-coder-2026"}
               target="_blank"
               rel="noreferrer"
             >
