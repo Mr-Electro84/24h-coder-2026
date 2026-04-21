@@ -1,8 +1,19 @@
 {
-  "slug": "lb-7567",
-  "title": "LB-7567",
-  "sourceDir": "LB-7567",
-  "author": "LB-7567",
-  "build": [],
-  "description": "TODO"
+  "id": "hack-the-system",
+  "title": "Hack The System",
+  "team": "LB-7567",
+  "authors": ["LB-7567"],
+  "description": "Plateformer 2D inspiré de Celeste et Super Mario : un virus s'infiltre dans une machine pour en extraire des données.",
+  "longDescription": "Explorez un système corrompu en contrôlant un virus doté d'un double saut et d'un dash 8 directions. Basculez entre **mode bleu** et **mode rouge** pour franchir des blocs qui n'existent que dans l'une des deux phases. Coyote time et jump buffer à la Celeste pour un feeling précis.",
+  "genre": "Platformer",
+  "language": "Fennel",
+  "controls": [
+    { "key": "← →", "action": "Déplacement" },
+    { "key": "Z", "action": "Saut (double saut possible)" },
+    { "key": "X", "action": "Dash (combiner avec ↑↓←→ pour la direction)" },
+    { "key": "A", "action": "Basculer mode bleu / rouge" }
+  ],
+  "sourceDir": "HACK-THE-SYSTEM",
+  "coverPath": "screenshots/Startscreenv2.png",
+  "build": ["load assets/game.tic", "import code src/main.fnl"]
 }
