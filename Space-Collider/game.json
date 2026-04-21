@@ -15,7 +15,7 @@
     { "key": "⬆/⬇", "action": "Se déplacer" },
     { "key": "⬅/➡", "action": "Ajuster la vitesse" }
   ],
-  "sourceDir": ".",
+  "sourceDir": "Space-Collider",
   "coverPath": "screenshots/scr1.png",
   "build": [
     "load assets/game.tic",
