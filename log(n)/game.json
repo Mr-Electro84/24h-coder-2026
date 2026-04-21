@@ -12,6 +12,7 @@
     { "key": "↑ ↓", "action": "Naviguer dans le shop" },
     { "key": "Z", "action": "Confirmer / Démarrer / Rejouer" }
   ],
+  "repoUrl": "https://github.com/loganvlr/24h-pour-coder-2026",
   "sourceDir": "log(n)",
   "coverPath": "cover.png",
   "build": ["load assets/game.tic", "import code src/main.fnl"]

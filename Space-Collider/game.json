@@ -16,6 +16,7 @@
     { "key": "← ↑ ↓ →", "action": "Piloter le vaisseau / naviguer dans le menu" },
     { "key": "Z", "action": "Valider une option du menu" }
   ],
+  "repoUrl": "https://github.com/Mr-Electro84/24h-pour-coder-2026",
   "sourceDir": "Space-Collider",
   "coverPath": "screenshots/scr1.png",
   "build": ["load assets/game.tic", "import code src/main.fnl"]

@@ -13,6 +13,7 @@
     { "key": "X", "action": "Poser une échelle" },
     { "key": "R", "action": "Recommencer la partie" }
   ],
+  "repoUrl": "https://github.com/MathisHz/24h-pour-coder-2026-BecVerresoeur",
   "sourceDir": "Expedition-Felicien",
   "coverPath": "img/level1.png",
   "build": ["load assets/game.tic", "import code src/main.fnl"]

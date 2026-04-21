@@ -13,6 +13,7 @@
     { "key": "X", "action": "Dash (combiner avec ↑↓←→ pour la direction)" },
     { "key": "A", "action": "Basculer mode bleu / rouge" }
   ],
+  "repoUrl": "https://github.com/LB-7567/24h-pour-coder-2026",
   "sourceDir": "HACK-THE-SYSTEM",
   "coverPath": "screenshots/Startscreenv2.png",
   "build": ["load assets/game.tic", "import code src/main.fnl"]

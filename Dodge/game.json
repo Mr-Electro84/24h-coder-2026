@@ -11,6 +11,7 @@
     { "key": "Espace", "action": "Commencer une partie" },
     { "key": "← ↑ ↓ →", "action": "Déplacer le fenouil" }
   ],
+  "repoUrl": "https://github.com/KotaroInugamie/24h-pour-coder-2026",
   "sourceDir": "Dodge",
   "coverPath": "cover.png",
   "build": ["load assets/game.tic"]

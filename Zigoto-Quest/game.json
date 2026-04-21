@@ -14,6 +14,8 @@
     { "key": "Z", "action": "Utilitaire" },
     { "key": "X", "action": "Valider (menu, récompenses, achats)" }
   ],
+  "award": "jury",
+  "repoUrl": "https://github.com/Lucas-Rosenzweig/24h-pour-coder-2026",
   "sourceDir": "Zigoto-Quest",
   "coverPath": "cover.png",
   "build": ["import code src/main.lua"]
