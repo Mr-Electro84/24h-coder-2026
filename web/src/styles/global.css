@@ -287,3 +287,41 @@ img.pixel {
   margin-bottom: 1rem;
   font-size: 0.85rem;
 }
+
+/* Award badges */
+.game-card-cover {
+  position: relative;
+}
+
+.game-badge {
+  display: inline-block;
+  padding: 0.25rem 0.6rem;
+  font-family: var(--pixel-font);
+  font-size: 0.6rem;
+  line-height: 1.4;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.game-card-cover .game-badge {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: rgba(15, 15, 26, 0.92);
+  backdrop-filter: blur(2px);
+}
+
+.game-page aside .game-badge {
+  margin: 0 0 0.75rem;
+  display: block;
+}
+
+.game-badge--jury {
+  color: #ffd166;
+}
+
+.game-badge--public {
+  color: #ef476f;
+}
