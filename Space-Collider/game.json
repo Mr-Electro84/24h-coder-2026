@@ -1,0 +1,24 @@
+{
+  "id": "space-collider",
+  "title": "Space Collider",
+  "team": "Brigade anti-virus",
+  "authors": [
+    "ABOUBAKAR Abdoul Malik",
+    "DE FAVERI SERRE Thomas",
+    "GROSY Diwan",
+    "RABEMAHEFA Mathieu"
+  ],
+  "description": "Jeu de simulation spatiale. Jouez avec la gravité pour collecter les étoiles tout en évitant les astéroïdes !",
+  "genre": "Simulation",
+  "language": "Fennel",
+  "controls": [
+    { "key": "⬆/⬇", "action": "Se déplacer" },
+    { "key": "⬅/➡", "action": "Ajuster la vitesse" }
+  ],
+  "sourceDir": ".",
+  "coverPath": "screenshots/scr1.png",
+  "build": [
+    "load assets/game.tic",
+    "import code src/main.fnl"
+  ]
+}
