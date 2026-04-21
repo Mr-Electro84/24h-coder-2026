@@ -1,0 +1,20 @@
+{
+  "id": "expedition-felicien",
+  "title": "Expédition Félicien",
+  "team": "BecVerresoeur",
+  "authors": ["BecVerresoeur"],
+  "description": "Jeu d'action/exploration rétro. Incarnez Félicien, dernier maître affineur-mineur, dans une quête souterraine pour retrouver le légendaire Saint-Félicien.",
+  "longDescription": "Traversez 4 zones souterraines de plus en plus profondes et dangereuses avec votre foreuse géante (5×4 tuiles).\n\n- Collectez les minerais **Orange**, **Vert** et **Rouge** (rare, à partir du niveau 2) pour améliorer votre équipement.\n- Entre chaque niveau, dépensez vos ressources à la **boutique** pour booster moteur, réservoir de fuel ou puissance de lames.\n- À partir du niveau 3, les monstres deviennent plus robustes et infligent deux fois plus de dégâts.\n- Objectif final : trouver l'artefact **Saint-Félicien** au cœur du niveau 4.",
+  "genre": "Action / Exploration",
+  "language": "Fennel",
+  "controls": [
+    { "key": "← ↑ ↓ →", "action": "Se déplacer / Miner dans une direction" },
+    { "key": "Z", "action": "Sauter / Valider dans le shop" },
+    { "key": "X", "action": "Poser une échelle" },
+    { "key": "R", "action": "Recommencer la partie" }
+  ],
+  "repoUrl": "https://github.com/MathisHz/24h-pour-coder-2026-BecVerresoeur",
+  "sourceDir": "Expedition-Felicien",
+  "coverPath": "img/level1.png",
+  "build": ["load assets/game.tic", "import code src/main.fnl"]
+}

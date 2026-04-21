@@ -13,6 +13,8 @@
     { "key": "Bouton lumiere (x3)", "action": "Repousser Nodes" },
     { "key": "Bouton rideau", "action": "Repousser les yeux rouges" }
   ],
+  "award": "public",
+  "repoUrl": "https://github.com/LaLangousteFolle/24h-pour-coder-2026",
   "sourceDir": "Five-Nights-At-CERIs",
   "coverPath": "assets/sprites.png",
   "build": ["load assets/game.tic"]

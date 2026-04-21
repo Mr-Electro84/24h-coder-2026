@@ -45,6 +45,9 @@ node_modules/
 echo-clone-souls/presentation-projet-24h.pptx
 ./.local
 
+# temp forks import
+.tmp/
+
 # web (Vite app)
 web/node_modules/
 web/dist/

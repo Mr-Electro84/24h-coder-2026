@@ -8,9 +8,9 @@
 
 **Branche de travail** : `web/v0.1`.
 
-**Dernière action** : CI + déploiement GitHub Pages en place. Runtime TIC-80 (`tic80.js` + `tic80.wasm`) factorisé dans `_shared/` pour mutualiser le cache navigateur entre jeux. Prefetch du wasm dès l'arrivée sur le site (`App.tsx`). Spinner « Chargement du jeu… » affiché après le clic « Cliquez pour jouer » jusqu'au `postMessage({ticReady: true})` émis par `Module.onRuntimeInitialized` injecté dans l'HTML patché.
+**Dernière action** : Import des 7 forks de jeux du hackathon 2026 dans des dossiers à la racine. Stubs `game.json` créés pour chaque jeu (champ `build` vide à renseigner). Voir §Import forks 2026-04-21 pour le détail.
 
-**Prochaine étape** : Vérifier en prod (GitHub Pages) que : (a) prefetch démarre au chargement de la galerie ; (b) spinner disparaît quand le jeu est jouable ; (c) charger un 2ᵉ jeu est quasi-instantané grâce au cache `_shared/`.
+**Prochaine étape** : Pour chaque nouveau dossier de jeu, renseigner `game.json` (`build`, `title`, `description`, `cover.png`), puis relancer `npm run build:tic` pour générer les exports HTML et vérifier que la galerie affiche toutes les cards.
 
 ## État du repo (snapshot à la création de ce fichier)
 
@@ -98,6 +98,29 @@ Voir [SPECS.md §Vérification end-to-end](SPECS.md#vérification-end-to-end). L
 ## Décisions en attente
 
 - ~~**Hosting** : reporté post-MVP~~ → **Activé** : GitHub Pages, URL `https://bde-ceri.github.io/24h-coder-2026/`. Action one-shot restante : Settings → Pages → Source = "GitHub Actions".
+
+## Import forks 2026-04-21
+
+7 forks importés comme dossiers à la racine. Chaque dossier contient l'intégralité du fork (sans `.git/`).
+
+| Dossier | game.json | cover.png | build à renseigner |
+|---|---|---|---|
+| `LB-7567/` | stub créé | ❌ manquant | ✅ oui |
+| `BecVerresoeur/` | stub créé | ❌ manquant | ✅ oui |
+| `loganvlr/` | stub créé | ❌ manquant | ✅ oui |
+| `KotaroInugamie/` | stub créé | ❌ manquant | ✅ oui |
+| `Showfeet/` | stub créé | ❌ manquant | ✅ oui |
+| `LaLangousteFolle/` | stub créé | ❌ manquant | ✅ oui |
+| `Mr-Electro84/` | stub créé | ❌ manquant | ✅ oui |
+
+Forks skippés :
+- `Equipe7-24h-pour-coder/24h-pour-coder-2026` : fork vide (identique à l'upstream).
+- `Lucas-Rosenzweig/24h-pour-coder-2026` : déjà présent dans le repo.
+
+**TODO** pour chaque jeu importé :
+- Remplir le champ `build` dans `game.json` selon l'organisation interne du dossier (sources Fennel/Lua, cartouche `.tic`, etc.). Voir [SPECS.md §Schéma game.json](SPECS.md#schéma-gamejson).
+- Fournir un `cover.png` (demander aux auteurs ou capturer une frame en jeu).
+- Renseigner `title`, `description`, `author` réels dans les stubs.
 
 ## Journal des mises à jour
 

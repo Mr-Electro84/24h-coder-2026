@@ -15,6 +15,7 @@
     { "key": "⬆/⬇", "action": "Se déplacer" },
     { "key": "⬅/➡", "action": "Ajuster la vitesse" }
   ],
+  "repoUrl": "https://github.com/Mr-Electro84/24h-pour-coder-2026",
   "sourceDir": "Space-Collider",
   "coverPath": "screenshots/scr1.png",
   "build": [
