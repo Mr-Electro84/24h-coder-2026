@@ -1,0 +1,18 @@
+{
+  "id": "log-n",
+  "title": "Log(n)",
+  "team": "log(n)",
+  "authors": ["Victor", "Thomas", "Samy", "Logan"],
+  "description": "Tower Defense : placez et améliorez des tours le long d'un chemin pour empêcher les vagues d'ennemis d'arriver au bout.",
+  "longDescription": "3 types de tours aux caractéristiques différentes :\n- **Archer** (50 gold) : tir rapide, portée longue, faibles dégâts.\n- **Mage** (80 gold) : équilibré, dégâts moyens.\n- **Cannon** (120 gold) : tir lent, gros dégâts, courte portée.\n\nAméliorations jusqu'au niveau 4 (augmente dégâts et portée, réduit le cooldown). Revente à 50% du total investi. Deux chemins possibles, les ennemis en choisissent un au hasard. Vous commencez avec 100 gold et 10 vies ; chaque ennemi tué rapporte 10 gold.",
+  "genre": "Tower Defense",
+  "language": "Fennel",
+  "controls": [
+    { "key": "Souris (clic)", "action": "Sélectionner un emplacement ou une tour" },
+    { "key": "↑ ↓", "action": "Naviguer dans le shop" },
+    { "key": "Z", "action": "Confirmer / Démarrer / Rejouer" }
+  ],
+  "sourceDir": "log(n)",
+  "coverPath": "cover.png",
+  "build": ["load assets/game.tic", "import code src/main.fnl"]
+}
