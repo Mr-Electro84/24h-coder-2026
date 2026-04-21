@@ -1,0 +1,22 @@
+{
+  "id": "space-collider",
+  "title": "Space Collider",
+  "team": "Brigade anti-virus",
+  "authors": [
+    "ABOUBAKAR Abdoul Malik",
+    "DE FAVERI SERRE Thomas",
+    "GROSY Diwan",
+    "RABEMAHEFA Mathieu"
+  ],
+  "description": "Simulation de gravité spatiale : pilotez un vaisseau, jouez avec la gravité des planètes pour collecter toutes les étoiles et éviter les astéroïdes.",
+  "longDescription": "Un système de gravité réaliste où chaque planète (Terre, Magma, Forêt, Métal, Trou noir) exerce son propre champ d'attraction. Traversez plusieurs niveaux en combinant poussée du vaisseau et attraction des planètes. Personnalisation du skin du vaisseau disponible depuis le menu.",
+  "genre": "Arcade / Physique",
+  "language": "Fennel",
+  "controls": [
+    { "key": "← ↑ ↓ →", "action": "Piloter le vaisseau / naviguer dans le menu" },
+    { "key": "Z", "action": "Valider une option du menu" }
+  ],
+  "sourceDir": "Space-Collider",
+  "coverPath": "screenshots/scr1.png",
+  "build": ["load assets/game.tic", "import code src/main.fnl"]
+}
