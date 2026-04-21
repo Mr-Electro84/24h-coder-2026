@@ -1,5 +1,7 @@
 export type GameLanguage = "Fennel" | "Lua" | "JS" | "Moon" | "Wren" | "Squirrel";
 
+export type GameAward = "jury" | "public";
+
 export type GameControl = { key: string; action: string };
 
 export type GameMeta = {
@@ -15,6 +17,8 @@ export type GameMeta = {
   sourceDir: string;
   coverPath: string;
   build: string[];
+  award?: GameAward;
+  repoUrl?: string;
 };
 
 const LANGS: GameLanguage[] = ["Fennel", "Lua", "JS", "Moon", "Wren", "Squirrel"];
@@ -67,6 +71,15 @@ export function validateGameMeta(raw: unknown, source: string): ValidationResult
     }
   }
 
+  const AWARDS: GameAward[] = ["jury", "public"];
+  const award = str("award");
+  if (r.award !== undefined && (!award || !AWARDS.includes(award as GameAward)))
+    push(`\`award\` (optionnel) doit valoir "jury" ou "public"`);
+
+  const repoUrl = str("repoUrl");
+  if (r.repoUrl !== undefined && (!repoUrl || !/^https?:\/\//.test(repoUrl)))
+    push(`\`repoUrl\` (optionnel) doit être une URL http(s)`);
+
   if (str("longDescription") === null && r.longDescription !== undefined && typeof r.longDescription !== "string")
     push("`longDescription` (optionnel) doit être une string");
 
@@ -85,6 +98,8 @@ export function validateGameMeta(raw: unknown, source: string): ValidationResult
     sourceDir: str("sourceDir")!,
     coverPath: str("coverPath")!,
     build: build as string[],
+    award: (award as GameAward | null) ?? undefined,
+    repoUrl: repoUrl ?? undefined,
   };
   return { ok: true, meta };
 }
